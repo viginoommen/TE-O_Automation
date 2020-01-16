@@ -1,0 +1,232 @@
+<?xml version="1.0"?>
+<Results version="1.0">
+<ReportNode type="testrun">
+<ReportNode type="Step">
+<Data>
+    <Name>Add-in(s) not activated</Name>
+    <Description>The following add-in(s) were associated with your test, but are not currently loaded: 
+ActiveX.</Description>
+    <StartTime>2019-11-06 13:58:48</StartTime>
+    <Result>Warning</Result>
+    <Extension>
+      <IsPlainTextNodeName>True</IsPlainTextNodeName>
+    </Extension>
+  </Data>
+</ReportNode>
+<ReportNode type="Action">
+<ReportNode type="Step">
+<Data>
+    <Name>LoadFunctionLibrary</Name>
+    <Description>LoadFunctionLibrary function passed</Description>
+    <StartTime>2019-11-06 13:58:49</StartTime>
+    <Result>Passed</Result>
+    <Extension>
+      <IconKey>1467c1a500724877a3fba2db7bffa71e</IconKey>
+      <IsPlainTextNodeName>True</IsPlainTextNodeName>
+    </Extension>
+  </Data>
+</ReportNode>
+<ReportNode type="Step">
+<Data>
+    <Name>LoadFunctionLibrary</Name>
+    <Description>LoadFunctionLibrary function passed</Description>
+    <StartTime>2019-11-06 13:58:49</StartTime>
+    <Result>Passed</Result>
+    <Extension>
+      <IconKey>1467c1a500724877a3fba2db7bffa71e</IconKey>
+      <IsPlainTextNodeName>True</IsPlainTextNodeName>
+    </Extension>
+  </Data>
+</ReportNode>
+<ReportNode type="Step">
+<Data>
+    <Name>SystemUtil.Run "chrome.exe",3</Name>
+    <StartTime>2019-11-06 13:58:50</StartTime>
+    <Result>Done</Result>
+    <Extension>
+      <IconKey>0194eb3f8e894aa68fb5122476886606</IconKey>
+      <IsPlainTextNodeName>True</IsPlainTextNodeName>
+    </Extension>
+  </Data>
+</ReportNode>
+<ReportNode type="Step">
+<Data>
+    <Name>[ WebElement ].Exist</Name>
+    <Description>"Object does not exist"</Description>
+    <StartTime>2019-11-06 13:58:55</StartTime>
+    <Result>Done</Result>
+    <Extension>
+      <TestObject>
+        <Repository>C:\UFT_Automation\Object_Repository\Service_Shared_OR.tsr</Repository>
+        <Path>
+          <Object>
+            <Type>Browser</Type>
+            <Name><![CDATA[[ Browser ]]]></Name>
+          </Object>
+          <Object>
+            <Type>Page</Type>
+            <Name><![CDATA[[ Page ]]]></Name>
+          </Object>
+          <Object>
+            <Type>WebElement</Type>
+            <Name><![CDATA[[ WebElement ]]]></Name>
+          </Object>
+        </Path>
+        <Operation>Exist</Operation>
+        <OperationData><![CDATA["Object does not exist"]]></OperationData>
+      </TestObject>
+      <IconKey>0e0c948e63344e3db6f337da88b95304</IconKey>
+      <IsPlainTextNodeName>True</IsPlainTextNodeName>
+    </Extension>
+  </Data>
+</ReportNode>
+<ReportNode type="Step">
+<Data>
+    <Name>[ WebEdit ].Exist</Name>
+    <Description>"Object does not exist"</Description>
+    <StartTime>2019-11-06 13:59:03</StartTime>
+    <Result>Done</Result>
+    <Extension>
+      <TestObject>
+        <Repository>C:\UFT_Automation\Object_Repository\Service_Shared_OR.tsr</Repository>
+        <Path>
+          <Object>
+            <Type>Browser</Type>
+            <Name><![CDATA[[ Login | Salesforce ]]]></Name>
+          </Object>
+          <Object>
+            <Type>Page</Type>
+            <Name><![CDATA[[ Page ]]]></Name>
+          </Object>
+          <Object>
+            <Type>WebEdit</Type>
+            <Name><![CDATA[[ WebEdit ]]]></Name>
+          </Object>
+        </Path>
+        <Operation>Exist</Operation>
+        <OperationData><![CDATA["Object does not exist"]]></OperationData>
+      </TestObject>
+      <IconKey>469b7753ced1484da66ef79da5c63a25</IconKey>
+      <IsPlainTextNodeName>True</IsPlainTextNodeName>
+    </Extension>
+  </Data>
+</ReportNode>
+<ReportNode type="Step">
+<Data>
+    <Name>[ WebElement ].Exist</Name>
+    <Description>"Object does not exist"</Description>
+    <StartTime>2019-11-06 13:59:09</StartTime>
+    <Result>Done</Result>
+    <Extension>
+      <TestObject>
+        <Repository>C:\UFT_Automation\Object_Repository\Service_Shared_OR.tsr</Repository>
+        <Path>
+          <Object>
+            <Type>Browser</Type>
+            <Name><![CDATA[[ Login | Salesforce ]]]></Name>
+          </Object>
+          <Object>
+            <Type>Page</Type>
+            <Name><![CDATA[[ Page ]]]></Name>
+          </Object>
+          <Object>
+            <Type>WebElement</Type>
+            <Name><![CDATA[[ WebElement ]]]></Name>
+          </Object>
+        </Path>
+        <Operation>Exist</Operation>
+        <OperationData><![CDATA["Object does not exist"]]></OperationData>
+      </TestObject>
+      <IconKey>0e0c948e63344e3db6f337da88b95304</IconKey>
+      <IsPlainTextNodeName>True</IsPlainTextNodeName>
+    </Extension>
+  </Data>
+</ReportNode>
+<ReportNode type="Step">
+<Data>
+    <Name>Object required: 'oTS.cells'</Name>
+    <ErrorText>Object required: 'oTS.cells'</ErrorText>
+    <Description>&lt;BR/&gt;Line (70): &amp;quot;TCID_TS=oTS.cells(rowTS,2)&amp;quot;.</Description>
+    <StartTime>2019-11-06 13:59:16</StartTime>
+    <Result>Failed</Result>
+    <Extension>
+      <StackTrace>
+        <StackFrame>
+          <ModuleName><![CDATA[Action1]]></ModuleName>
+          <FileName><![CDATA[Action1]]></FileName>
+          <Language><![CDATA[VBScript - script block]]></Language>
+          <FunctionName><![CDATA[VBScript global code]]></FunctionName>
+          <Scripts><![CDATA[TCID_TS=oTS.cells(rowTS,2)]]></Scripts>
+          <LineNo><![CDATA[70]]></LineNo>
+        </StackFrame>
+      </StackTrace>
+      <IconKey>d18e2b7104cd496e99017c5bf778a755</IconKey>
+      <IsPlainTextNodeName>True</IsPlainTextNodeName>
+      <MergeIsErrorIcon>True</MergeIsErrorIcon>
+    </Extension>
+  </Data>
+</ReportNode>
+<ReportNode type="Step">
+<Data>
+    <Name>Stop Run</Name>
+    <Description>Run stopped by user.</Description>
+    <StartTime>2019-11-06 13:59:20</StartTime>
+    <Result>Information</Result>
+    <Extension>
+      <IconKey>f2ebfea5210a4f0db9004d8b862f4a4d</IconKey>
+      <IsPlainTextNodeName>True</IsPlainTextNodeName>
+    </Extension>
+  </Data>
+</ReportNode>
+<Data>
+    <Name>Action1</Name>
+    <Description />
+    <StartTime>2019-11-06 13:58:48</StartTime>
+    <Duration>32</Duration>
+    <Result>Failed</Result>
+    <InputParameters />
+    <Extension>
+      <IconKey>e00b838266094ff6a087bf532ca7d209</IconKey>
+      <IsPlainTextNodeName>True</IsPlainTextNodeName>
+    </Extension>
+  </Data>
+</ReportNode>
+<Data>
+    <Name>serviceRegression</Name>
+    <ToolName>Micro Focus Unified Functional Testing</ToolName>
+    <ToolVersion>14.51</ToolVersion>
+    <ToolVersionStringLiteral>14.51</ToolVersionStringLiteral>
+    <Description />
+    <StartTime>2019-11-06 13:58:47</StartTime>
+    <Duration>33</Duration>
+    <Result>Failed</Result>
+    <InputParameters />
+    <Extension>
+      <IconKey>c5d9055fa9264c85936bf7e1ca0bb430</IconKey>
+      <IsPlainTextNodeName>True</IsPlainTextNodeName>
+    </Extension>
+    <Environment>
+      <Timezone>-06:00:00</Timezone>
+      <Locale>English (United States)</Locale>
+      <User>iamsabre\SG0218777</User>
+      <CpuInfo>Intel(R) Core(TM) i7-6600U CPU @ 2.60GHz</CpuInfo>
+      <NumberOfCores>4</NumberOfCores>
+      <TotalMemory>16276</TotalMemory>
+      <HostName>iamsabre.sabrenow.com\DE7TYDXF2</HostName>
+      <OSInfo>Windows 10</OSInfo>
+    </Environment>
+    <TestedApplications />
+    <Links>
+      <Link type="DataTable" reference="Default.xls" displayname="Default Data Table" />
+    </Links>
+  </Data>
+</ReportNode>
+<GeneralInfo>
+    <ResultName>Res6</ResultName>
+    <RunStartTime>2019-11-06 13:58:47</RunStartTime>
+    <Timezone>-06:00:00</Timezone>
+    <OrchestrationToolName>Micro Focus Unified Functional Testing</OrchestrationToolName>
+    <OrchestrationToolVersion>14.51</OrchestrationToolVersion>
+    <OrchestrationToolVersionStringLiteral>14.51</OrchestrationToolVersionStringLiteral>
+  </GeneralInfo>
+</Results>

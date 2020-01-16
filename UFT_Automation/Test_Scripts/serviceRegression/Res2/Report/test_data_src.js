@@ -1,0 +1,1 @@
+﻿var __testDataSource={items:[{dataFilePath:'Default.xls',dataFileFormat:'excel',dataFileFolder:'C:\\UFT_Automation\\Test_Scripts\\serviceRegression\\Res2',namePairs:[]}]};

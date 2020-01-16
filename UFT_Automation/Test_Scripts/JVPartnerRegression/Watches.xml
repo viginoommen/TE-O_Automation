@@ -1,0 +1,9 @@
+﻿<Properties>
+  <WatchEntry0 value="rCount" />
+  <WatchEntry1 value="strData" />
+  <WatchEntry2 value="strData" />
+  <WatchEntry3 value="RandomString" />
+  <WatchEntry4 value="Contact_Name" />
+  <WatchEntry5 value="oWebElement.Exist" />
+  <WatchEntry6 value="Object" />
+</Properties>

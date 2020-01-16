@@ -1,0 +1,870 @@
+Dim imageFilePath
+Dim CaptureBitmapPath
+
+'imageFilePath = "C:\Users\sg0303193\Documents\UFT_AUTOMATION\Results\ScreenShots\"
+imageFilePath = "D:\UFT_AUTOMATION\Results\ScreenShots\"
+
+'==========================================================================
+
+'Function Name:KeyWordExecutor
+'Description: It executes our functions via driver script
+'Created By: Sinan Yamanoglu
+'Date: 8/10/2018
+
+Function KeyWordExecutor(KeyWord,arg1,arg2,arg3,arg4,arg5,arg6,arg7)
+
+Select Case Keyword
+
+'Generic Functions
+
+	Case "Find_Link"
+	retVal=Find_Link (arg1,arg2,arg3,arg4,arg5,arg6)
+	Case "Click_WebElement"
+	retVal=Click_WebElement (arg1,arg2,arg3,arg4,arg5,arg6) 
+	Case "Close_2nd_Browser"
+	retVal=Close_2nd_Browser()
+	Case "Wait_Time"
+	retVal=Wait_Time (arg1)
+	Case "Find_WebCheckBox"
+	retVal=Find_WebCheckBox (arg1,arg2,arg3)
+	Case "Find_WebButton"
+	retVal=Find_WebButton (arg1,arg2,arg3,arg4,arg5)
+	Case "VerifyLabel"
+	retVal=VerifyLabel (arg1,arg2,arg3,arg4)   
+	Case "Find_WebEdit"
+	retVal=Find_WebEdit (arg1,arg2,arg3,arg4,arg5,arg6)	
+	Case "Focus_WebElement"
+	retVal=Focus_WebElement (arg1,arg2,arg3)
+	Case "Find_WebList"
+	retVal=Find_WebList (arg1,arg2,arg3,arg4,arg5,arg6) 
+	Case "Find_Image"
+	retVal=Find_Image(arg1,arg2,arg3,arg4,arg5)
+	Case "Check_Outlook_Inbox_Folder"
+	retVal=Check_Outlook_Inbox_Folder(arg1)
+	Case "Find_WebTable_Value"
+	retVal=Find_WebTable_Value (arg1,arg2,arg3) 
+	Case "Keyboard"
+	retVal=Keyboard (arg1)
+	Case "Click_WebTable_First_Row_Link"
+	retVal=Click_WebTable_First_Row_Link (arg1)
+	Case "Select_WebTable_Object"
+	retVal=Select_WebTable_Object (arg1,arg2,arg3,arg4,arg5)
+	Case "Browser_Action"
+	retVal=Browser_Action (arg1,arg2)
+	
+'Application Functions	
+	Case "LoginToSFDC_Admin"
+	retVal=LoginToSFDC_Admin()
+	Case "Log_into_SFDC_as_User"
+	retVal=Log_into_SFDC_as_User(arg1)
+	Case "createQuoteForSubscriberOpportunity"
+	retVal=createQuoteForSubscriberOpportunity ()
+	Case "Select_Account_Name"
+	retVal=Select_Account_Name (arg1)
+	Case "Create_New_Contact"
+	retVal=Create_New_Contact (arg1,arg2,arg3)
+	Case "Compare_Contact_ID_and_Name"
+	retVal=Compare_Contact_ID_and_Name()  
+	Case "Compare_SAP_Contract_Id"
+	retVal=Compare_SAP_Contract_Id()
+	Case "ChangeOwner"
+	retVal=ChangeOwner(arg1)
+	Case "LoginToMicrosoftAccount"
+	retVal=LoginToMicrosoftAccount() 
+	Case "Set_Location"
+	retVal=Set_Location(arg1)
+	Case "Set_PCC"
+	retVal=Set_PCC(arg1)
+	Case "Update_Booking_Total"
+	retVal=Update_Booking_Total(arg1)
+	Case "Access_Travel_Agency"
+	retVal=Access_Travel_Agency(arg1)
+	Case "Select_Various_Embedded_Links"
+	retVal=Select_Various_Embedded_Links()
+	Case "Verify_Error_Message"
+	retVal=Verify_Error_Message()
+	Case "Access_Travel_Network_Oppotunity"
+	retVal=Access_Travel_Network_Oppotunity()
+	Case "Validate_My_Opportunitie_are_accurate_from_the_opportunity_list_view"
+	retVal=Validate_My_Opportunitie_are_accurate_from_the_opportunity_list_view(arg1)
+	Case "ChangeAccountOwner"
+	retVal=ChangeAccountOwner(arg1)
+	Case "Log_out"
+	retVal=Log_out()
+	Case "Global_Search"
+	retVal=Global_Search(arg1,arg2)
+	Case "Check_Read_Only"
+	retVal=Check_Read_Only()
+	Case "DeleteTestDataCreated"
+	retVal=DeleteTestDataCreated(arg1,arg2)
+	Case "Select_Product_Name"
+	retVal=Select_Product_Name(arg1)
+	Case "NewOpp_AirlineSolutions_SetData"
+	retVal=NewOpp_AirlineSolutions_SetData(arg1,arg2,arg3,arg4,arg5,arg6,arg7)
+	Case "Edit_Details_AS_Opportunity"
+	retVal=Edit_Details_AS_Opportunity()
+	Case "Select_NewlyCreatedOpportunity"
+	retVal=Select_NewlyCreatedOpportunity(arg1)
+	Case "NewOpp_TNSupplierCommerce_SetData"
+	retVal=NewOpp_TNSupplierCommerce_SetData(arg1,arg2,arg3,arg4,arg5,arg6)
+End Select
+'print retVal
+KeyWordExecutor=retVal
+
+End Function
+
+'=======================================
+
+'Function Name: timeStamp
+'Description: to add timestamp in our scripts and files
+'Created By: Sinan Yamanoglu
+'Date: 5/10/2018
+
+Function timeStamp()
+	Dim tempTime
+	tempTime=now
+	tempTime=replace(tempTime,"/","_")
+	'tempTime=replace(tempTime,":","")
+	tempTime=replace(tempTime," ","/")
+	timeStamp=tempTime
+End Function
+
+'===========================================
+'Function Name: Find_Link
+'Description: It finds every link object any application
+'			  It performs selected action in the argument(click,highlight)
+'Created By: Sinan Yamanoglu
+'Date: 8/10/2018
+
+Function Find_Link(innertext,name,index,visible,action,xpath)
+	
+Set oDesc = Description.Create
+	oDesc("html tag").value = "A"
+	oDesc("visible").value = True
+	oDesc("innertext").value = innertext
+	oDesc("class").value=ClassName
+	oDesc("name").value=name
+	
+	If index <> "" Then
+		oDesc("index").Value = index
+	End If
+	
+	If xpath <> "" Then
+		oDesc("xpath").value=xpath
+	End If
+Set oLink = Browser("title:=.*").Page("title:=.*").Link(oDesc)
+	
+	CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+	
+If oLink.Exist Then
+		
+	If action = "highlight" Then
+		oLink.highlight
+		'Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micPass, "Highlight link :" & innertext,"Link highlighted"', CaptureBitmapPath
+		Find_Link="Pass"			
+	ElseIf action = "click" Then
+		oLink.click
+		'Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micPass, "Click on link :" & innertext,"Link clicked"', CaptureBitmapPath
+		Find_Link="Pass"
+	else
+		'Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micWarning, "Found link, no action specified :" & innertext,"Found Link, no action performed" ', CaptureBitmapPath
+		Find_Link="Fail"
+	End If
+else
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micFail, "Could not find link :" & innertext,"Link can not be found" , CaptureBitmapPath
+		Find_Link="Fail"
+End If
+
+Set oDesc=nothing
+Set oLink=nothing
+	
+End Function
+'=========================================
+
+'Function Name: Close_Browsers
+'Description: It closes every browser opened
+'Created By: Sinan Yamanoglu
+'Date: 5/10/2018
+
+Function Close_Browsers()
+if Browser("title:=.*").Exist(10) then
+	Browser("title:=.*").CloseAllTabs
+	Close_Browsers="Pass"
+	Reporter.ReportEvent micPass, "Close All Open Browsers", "Pass"
+else
+	Close_Browsers="Fail"
+	Reporter.ReportEvent micFail, "Close All Open Browsers", "Fail"
+end if
+End Function
+
+'==========================================
+
+'Function Name	: Find_WebEdit
+'Description	: It finds every WebEdit in any application and performs actions choosen inside	
+'			      It performs selected action in the argument(click, highlight, set_value)
+'Created By: Sinan Yamanoglu
+'Last UpDate: 8/10/2018
+
+Function Find_WebEdit(className,index,visible,action,input_value,placeholder)
+	
+Set oDesc=Description.Create
+	oDesc("micClass").value="WebEdit"
+	oDesc("html tag").value=html_tag
+	oDesc("visible").value=True
+	oDesc("name").value=name
+	oDesc("class").value=className
+	oDesc("placeholder").value=placeholder
+	
+	If index <> "" Then
+		oDesc("index").value = index
+	End If
+	
+	If xpath <> "" Then
+		oDesc("xpath").value = xpath
+	End If
+	
+Set oWebEdit=Browser("title:=.*").Page("title:=.*").WebEdit(oDesc)
+
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+If oWebEdit.Exist(10) Then
+	If action="highlight" Then
+		oWebEdit.highlight
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micPass, "Highlight WebEdit:","WebEdit Highlighted", CaptureBitmapPath
+		Find_WebEdit="Pass"
+	ElseIf action="click" Then
+		oWebEdit.click
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micPass, "Click on WebEdit:","WebEdit Clicked", CaptureBitmapPath
+		Find_WebEdit="Pass"
+	ElseIf action = "set_value" Then
+		oWebEdit.set input_value
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True		
+		Reporter.ReportEvent micPass, "Set value to WebEdit :" & input_value,"value inserted to WebEdit", CaptureBitmapPath
+		Find_WebEdit="Pass"
+	else
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micFail, "No action specified for Webedit:", "Found WebEdit, but no action performed", CaptureBitmapPath
+		Find_WebEdit="Fail"
+	End If
+Else
+	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent micFail, "Couldn't find WebEdit","WebEdit cannot be found", CaptureBitmapPath
+	Find_WebEdit="Fail"
+End If
+
+Set oDesc=nothing
+Set oWebEdit=nothing
+
+End Function
+
+'===============================================
+
+'Function Name	: Find_WebButton	
+'Description	: It finds WebButton in any application and performs action choosen 
+'			      It performs selected action in the argument(click, highlight)
+'Created By: Sinan Yamanoglu
+'Last UpDate: 8/10/2018
+
+Function Find_WebButton (innertext,name,visible,action,index)
+	
+Set oDesc=Description.Create
+	oDesc("micClass").value="WebButton"
+	oDesc("innertext").value=innertext
+	oDesc("html tag").value=html_tag
+	oDesc("visible").value=visible
+	oDesc("class").value=classname
+	oDesc("xpath").value=xpath
+	oDesc("name").value=name
+	
+	If index <> "" Then
+		oDesc("index").Value = index
+	End If
+	
+Set oWebButton=Browser("title:=.*").Page("title:=.*").WebButton(oDesc)
+
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+If oWebButton.Exist Then 
+	If action = "highlight" Then
+		Browser("title:=.*").Page("title:=.*").Sync
+		oWebButton.highlight
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micPass, "highlight WebButton :" & innertext," WebButton highlighted", CaptureBitmapPath
+		Find_WebButton="Pass"
+	ElseIf action = "click" Then
+		Browser("title:=.*").Page("title:=.*").Sync
+		oWebButton.click
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micPass, "click WebButton :" & innertext," WebButton clicked", CaptureBitmapPath
+		Find_WebButton="Pass"
+	else
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micWarning, "No action specified for WebButton:" & innertext,"Found WebButton, but no action performed", CaptureBitmapPath
+		Find_WebButton="Fail"
+	End If
+Else
+	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent micFail, "Could not find WebButton :" & innertext,"WebButton can not be found", CaptureBitmapPath
+	Find_WebButton="Fail"
+End If
+	
+Set oDesc=nothing
+Set oWebButton=nothing
+
+End Function
+
+'=====================================
+
+'Function Name	: Find_WebCheckBox	
+'Description	: It finds WebCheckBox and performs action choosen (highlight, SET_ON, SET_OFF) 	
+'Created By: Sinan Yamanoglu
+'Last UpDate: 8/10/2018
+
+Function Find_WebCheckBox(action,index,xpath)
+
+Set oDesc=Description.Create
+oDesc("micClass").value="WebCheckBox"
+oDesc("name").value=name
+oDesc("html tag").value="INPUT"
+oDesc("type").value="checkbox"
+oDesc("visible").value="True"
+
+if index <> "" then
+   oDesc("index").value=index
+end if 
+
+if xpath <> "" then
+   oDesc("xpath").value=xpath
+end if 
+
+Set oWebCheckBox=Browser("title:=.*").Page("title:=.*").WebCheckBox(oDesc)
+
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+if oWebCheckBox.Exist(10) then
+	If action = "highlight" Then
+		Browser("title:=.*").Page("title:=.*").Sync
+		oWebCheckBox.highlight
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micPass, "Highlight WebCheckBox ", "WebCheckBox highlighted", CaptureBitmapPath
+		Find_WebCheckBox="Pass"
+	ElseIf action = "SET_ON" Then
+		Browser("title:=.*").Page("title:=.*").Sync	
+	   	oWebCheckBox.Set "ON"
+	   	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	   	Reporter.ReportEvent micPass,"Check On/Off" & name, "Successfully Checked on the oWebCheckBox", CaptureBitmapPath
+	   	Find_WebCheckBox="Pass"
+   	ElseIf action = "SET_OFF" Then
+		Browser("title:=.*").Page("title:=.*").Sync   	
+	   	oWebCheckBox.Set "OFF"
+	   	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	   Reporter.ReportEvent micPass,"Check On/Off" & name, "Successfully Unchecked on the oWebCheckBox", CaptureBitmapPath
+	   Find_WebCheckBox="Pass"
+	else
+	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+   	Reporter.ReportEvent micFail,"Click On/Off-" & name, "Could not locate the oWebCheckBox on the page", CaptureBitmapPath
+   	Find_WebCheckBox="Fail"
+	End if 
+End if
+
+Set oDesc=nothing
+Set oWebCheckBox=nothing
+
+End Function
+
+'=========================================
+
+'Function Name	: Find_Image	
+'Description	: It finds Images and performs action choosen (highlight, click)	
+'Created By: Sinan Yamanoglu
+'Last UpDate: 8/10/2018
+
+Function Find_Image (html_tag,fileName,classname,index,action)
+Browser("title:=.*").Page("title:=.*").Sync
+action=lcase(action)
+Set oDesc = Description.Create
+	oDesc("html tag").value = html_tag
+	oDesc("visible").value = True
+	oDesc("file name").value=fileName
+	oDesc("name").value = name
+	oDesc("class").value = classname
+	if index <> "" then
+			oDesc("index").value=index
+	end if
+
+	Set oImage = Browser("title:=.*").Page("title:=.*").Image(oDesc)
+	
+	CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+	
+If oImage.Exist(10) Then 
+	If action = "highlight" Then
+		oImage.highlight
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micPass, "Highlight Image :" & fileName,"Image highlighted"
+		Find_Image="Pass"
+	ElseIf action = "click" Then
+		oImage.click
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micPass, "Click on Image :" & fileName,"Image clicked"
+		Find_Image="Pass"
+	else
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micWarning, "Finding Image, no action specified :" & fileName,"Found Image, no action performed", CaptureBitmapPath
+		Find_Image="Fail"
+	End If 
+Else	
+	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent micFail, "Could not find Image :" & fileName,"Image can not be found", CaptureBitmapPath
+	Find_Image = "Fail"
+End If
+
+Set oDesc=nothing
+Set oImage=nothing
+End Function
+
+'====================================
+
+'Function Name	: VerifyLabel	
+'Description	: It finds WebElement and highlights	
+'Created By: Sinan Yamanoglu
+'Last UpDate: 8/10/2018
+
+Function VerifyLabel(HtmlTag,InnerText,index,classname)
+
+Browser("title:=.*").Page("title:=.*").Sync
+Set oDesc = Description.Create
+	oDesc("html tag").Value = HtmlTag
+	oDesc("innertext").Value = InnerText
+	oDesc("visible").Value = True
+	oDesc("class").Value = classname
+	
+	If index <> "" Then
+		oDesc("index").value = index
+	End If
+Set oLabel = Browser("title:=.*").Page("title:=.*").Webelement(oDesc)
+
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+	If oLabel.Exist Then
+		oLabel.highlight
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micPass,"Verify Label - " & InnerText, "Label is present as expected", CaptureBitmapPath
+		VerifyLabel = "Pass"
+	else
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micfail,"Verify Label - " & InnerText, "Label is NOT present as expected", CaptureBitmapPath
+		VerifyLabel = "Fail"
+	End If
+
+Set oDesc = nothing	
+Set oLabel = nothing
+
+End Function
+
+'======================================================================
+
+'Function Name	: Click_WebElement	
+'Description	: It finds WebElement and clicks 	
+'Created By: Sinan Yamanoglu
+'Last UpDate: 3/26/2019
+
+Function Click_WebElement(HtmlTag,innertext,visible,className,index,xpath)
+
+Set oDesc = Description.Create
+	oDesc("html tag").Value = HtmlTag
+	oDesc("innertext").Value = innertext
+	oDesc("visible").Value=visible
+	oDesc("class").Value=className
+	
+	If index <> "" Then
+		oDesc("index").Value = index
+	End If
+	
+	If xpath <> "" Then
+		oDesc("xpath").value=xpath
+	End If
+Set oWebElement = Browser("title:=.*").Page("title:=.*").WebElement(oDesc)
+
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+If oWebElement.Exist(10) Then
+	oWebElement.Click
+	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent micPass,"Click on " & innertext,"Successfully Clicked on the Link", CaptureBitmapPath	 
+	Click_WebElement = "Pass"
+else
+	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent micFail,"Click on " & innertext,"Could not Locate the WebElement on the Page", CaptureBitmapPath
+	Click_WebElement = "Fail"
+End If
+	 
+Set oDesc = nothing
+Set oWebElement = nothing
+	
+End Function
+
+'=====================================
+
+'Function Name	: Select_WebRadioGroup_Item	
+'Description	: It finds WebRadioGroup and selects value desired
+'Created By: Sinan Yamanoglu
+'Last UpDate: 8/10/2018
+
+Function Select_WebRadioGroup_Item(Name,Value)
+	
+Set oDesc = Description.Create
+	oDesc("html tag").Value = "INPUT"
+	oDesc("name").Value = Name
+	
+Set oWebRadioGroup = Browser("title:=.*").Page("title:=.*").WebRadioGroup(oDesc)
+
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+	If oWebRadioGroup.Exist(10) Then
+		oWebRadioGroup.Select Value
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micPass,"Select From WebRadioGroup - " & Name,Value & " was successfully Selected", CaptureBitmapPath
+		Select_WebRadioGroup_Item = "Pass"
+	Else
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micFail,"Select From WebRadioGroup - " & Name,Value & "WebRadioGroup was not found on the Page", CaptureBitmapPath
+		Select_WebRadioGroup_Item = "Fail"
+	End If
+	
+Set oDesc = nothing
+Set oWebRadioGroup = nothing
+End Function
+
+'=================================================
+
+'Function Name	: Find_WebList	
+'Description	: It finds Weblist object with classname and performs choosen action(highlight, select_item) 
+'Created By: Sinan Yamanoglu
+'Last UpDate: 8/10/2018
+
+Function Find_WebList (name,ClassName,action,itemnumber,html_tag,index)
+
+action=lcase(action)
+Set oDesc = Description.Create
+oDesc("html tag").value = html_tag
+oDesc("visible").value = True
+oDesc("select type").value="ComboBox Select"
+oDesc("name").value = name
+oDesc("class").value = ClassName
+
+ If index<>"" Then
+ oDesc("index").value=index
+ End If 
+ 
+Set oWebList = Browser("title:=.*").Page("title:=.*").WebList(oDesc)
+
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+If oWebList.Exist(10) Then 
+	If lcase(action) = "highlight" Then
+		oWebList.highlight
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micPass, "Highlight Web List :" & name,"Web List highlighted", CaptureBitmapPath
+		Find_WebList = "Pass"
+	ElseIf lcase(action)="select_item" Then
+		oWebList.select itemnumber
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micPass, "Click on Web List :" & name, " inserted to Web List", CaptureBitmapPath
+		Find_WebList = "Pass"
+	else
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micWarning, "Finding Web List, no action specified :" & name,"Found Web List, no action performed", CaptureBitmapPath
+	End If 
+Else
+	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent micFail, "Could not find Web List :" & name,"Web List can not be found", CaptureBitmapPath
+	Find_WebList = "Fail"
+End If
+
+Set oDesc = nothing
+Set oWebList = nothing
+
+End Function
+
+'=============================================================================
+
+'Function Name	: Focus_WebElement	
+'Description	: It finds WebElement and scrolls page to that object
+'Created By: Sinan Yamanoglu
+'Last UpDate: 8/10/2018
+
+Function Focus_WebElement (ClassName,innertext,index)
+
+Set oDesc = Description.Create
+	oDesc("class").value = ClassName
+	oDesc("visible").value = True
+	oDesc("innertext").value = innertext
+	
+	If index <> "" Then
+		oDesc("index").Value = index
+	End If
+	
+Set oWebElement = Browser("title:=.*").Page("title:=.*").WebElement(oDesc)
+
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+	If oWebElement.Exist(10) Then
+		oWebElement.Object.Focus
+		oWebElement.Object.scrollIntoView
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micPass, "Object Focus" & innertext, "Pass", CaptureBitmapPath
+		Focus_WebElement = "Pass"
+	Else
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micFail, "It couldn't focus to WebElement" & innertext, "Fail", CaptureBitmapPath
+		Focus_WebElement = "Fail"
+	End If
+	
+	Set oDesc = nothing
+	Set oWebElement = nothing
+End Function
+
+ '====================================================================
+
+'Function Name	: Close_2nd_Browser	
+'Description	: It closes second opened browser
+'Created By: Sinan Yamanoglu
+'Last UpDate: 8/10/2018
+
+Function Close_2nd_Browser()
+
+If Browser("CreationTime:=1").Exist(5) Then
+	Browser("CreationTime:=1").Close
+	Reporter.ReportEvent micPass, "Close 2nd Browser", "Pass"
+	Close_2nd_Browser = "Pass"
+Else
+	Reporter.ReportEvent micPass, "Close 2nd Browser", "Pass"
+	Close_2nd_Browser = "Fail"
+End If
+End Function
+
+'======================================================
+
+Function Wait_Time(TimeInSeconds)
+	wait TimeInSeconds
+	Wait_Time = "Pass"
+End Function
+
+'==========================================================
+'Function Name	: Check_Outlook_Inbox_Folder	
+'Description	: It searchs email subject in outlook inbox folder. If it finds the Search_Item, it returns to Pass status
+'Created By: Sinan Yamanoglu
+'Last UpDate: 3/20/2019
+
+Function Check_Outlook_Inbox_Folder(Search_Item)
+
+	Set appOutl = CreateObject("Outlook.Application")
+	Set objSession = appOutl.GetNameSpace("MAPI")
+	
+	'  6 = "Inbox"
+	'  9 = "Calendar"
+	' 10 = "Contacts"
+	
+	Set MyFolder = objSession.GetDefaultFolder(6)
+	Set myItems = myFolder.Items
+	
+	For I = 1 to MyFolder.Items.Count
+		If MyItems(I).subject = Search_Item Then
+			'print MyItems(I).body
+			'print MyItems(I).subject
+		Reporter.ReportEvent micPass, "It found the seacrh item in outlook", "Pass"
+		Check_Outlook_Inbox_Folder = "Pass"
+			Exit for
+		End If
+	Next
+	
+End Function
+
+'=================================================================
+'Function Name	: Find_WebTable_Value	
+'Description	: It searchs value in a webtable with using webtable classname, searh value and column number. If it finds the value, it returns to Pass status
+'Created By: Sinan Yamanoglu
+'Last UpDate: 4/15/2019
+
+Function Find_WebTable_Value(ClassName,SearchValue,Column)
+	
+	Set oDesc = Description.Create
+	oDesc("class").value=ClassName
+	oDesc("visible").value = True
+	oDesc("html tag").value="TABLE"
+	
+	If index <> "" Then
+		oDesc("index").Value = index
+	End If
+	
+	Set oWebTable = Browser("title:=.*").Page("title:=.*").WebTable(oDesc)
+	
+	CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+	
+	If oWebTable.Exist(10) Then
+	
+		rCount = oWebTable.RowCount	
+		
+		For k = 2 To rCount
+		strData=oWebTable.GetCellData(k,Column)
+		'print strData
+			If strData = SearchValue Then
+				set oLink=oWebTable.ChildItem(k,Column,"Link",0)
+					oLink.click
+					Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+					Reporter.ReportEvent micPass, "Value selected from webtable list", "Pass", CaptureBitmapPath
+					Find_WebTable_Value = "Pass"					
+				Exit For
+			End If
+		Next			
+	Else
+	Reporter.ReportEvent micFail, "WebTable does not exist", "Fail", CaptureBitmapPath
+	Find_WebTable_Value = "Fail"
+	End If
+	
+End Function
+
+'=================================================================
+'Function Name	: Keyboard	
+'Description	: It use device replay feature of UFT to press the keys in keyboard. 
+				'Space = 57, 
+				'Enter = 28
+'Created By: Sinan Yamanoglu
+'Last UpDate: 4/16/2019
+
+Function Keyboard(KeyNumber)
+
+	Set Keyboard = CreateObject("Mercury.DeviceReplay")
+	Keyboard.PressKey KeyNumber 
+	
+'	set mySendKeys = CreateObject("WScript.shell")
+'	mySendKeys.SendKeys "{ENTER}"
+
+	Keyboard = "Pass"
+	
+End Function
+'==================================================
+Function Click_WebTable_First_Row_Link(ClassName)
+
+Set oDesc = Description.Create
+	oDesc("class").value=ClassName
+	oDesc("visible").value = True
+	oDesc("html tag").value="TABLE"
+	
+	If index <> "" Then
+		oDesc("index").Value = index
+	End If
+	
+	Set oWebTable = Browser("title:=.*").Page("title:=.*").WebTable(oDesc)
+	
+	CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+	
+	If oWebTable.Exist(10) Then
+		set oLink=oWebTable.ChildItem(2,2,"Link",0)
+			oLink.click
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micPass, "Click Webtable First Row", "Pass", CaptureBitmapPath
+		Click_WebTable_First_Row_Link = "Pass"
+	Else
+		Reporter.ReportEvent micPass, "Click Webtable First Row", "Fail", CaptureBitmapPath
+		Click_WebTable_First_Row_Link = "Fail"
+	End If
+	
+End Function
+'==============================================================
+Function Select_WebTable_Object (ClassName,SearchValue,Cell_Column,Object,ChildItem_Column)
+	
+	Set oDesc = Description.Create
+	oDesc("class").value=ClassName
+	oDesc("visible").value = True
+	oDesc("html tag").value="TABLE"
+	
+	If index <> "" Then
+		oDesc("index").Value = index
+	End If
+	
+	Set oWebTable = Browser("title:=.*").Page("title:=.*").WebTable(oDesc)
+	
+	CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+	
+	If oWebTable.Exist(10) Then
+	
+		rCount = oWebTable.RowCount	
+		
+		For k = 2 To rCount
+		strData=oWebTable.GetCellData(k,Cell_Column)
+		'print strData
+			If strData = SearchValue Then
+				set oLink=oWebTable.ChildItem(k,ChildItem_Column,Object,0)
+					oLink.click
+					Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+					Reporter.ReportEvent micPass, "Value selected from webtable list", "Pass", CaptureBitmapPath
+					Select_WebTable_Object = "Pass"					
+				Exit For
+			End If
+		Next			
+	Else
+	Reporter.ReportEvent micFail, "WebTable does not exist", "Fail", CaptureBitmapPath
+	Select_WebTable_Object = "Fail"
+	End If
+	
+End Function
+'=============================================================
+'Function Name	: Browser_Action	
+'Description	:It perfoms selected actions for browser using creation time
+'Created By: Sinan Yamanoglu
+'Last UpDate: 8/3/2019
+
+Function Browser_Action (creation_time,action)
+	
+Set oDesc=Description.Create
+	oDesc("micClass").value="Browser"
+	oDesc("title").value=".*"
+	oDesc("CreationTime").value=creation_time
+	oDesc("visible").value=visible
+	oDesc("name").value=name
+	
+	If index <> "" Then
+		oDesc("index").Value = index
+	End If
+	
+Set oBrowser=Browser(oDesc)
+
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+If oBrowser.Exist(30) Then 
+	If action = "Back" Then
+		oBrowser.Back
+		Reporter.ReportEvent micPass, "Browser action "& action,"Pass"
+		Browser_Action="Pass"
+	ElseIf action = "Refresh" Then
+		oBrowser.Refresh
+		Reporter.ReportEvent micPass, "Browser action "& action,"Pass"
+		Browser_Action="Pass"
+	ElseIf action = "Close" Then
+		oBrowser.Close
+		Reporter.ReportEvent micPass, "Browser action "& action,"Pass"
+		Browser_Action="Pass"
+	ElseIf action = "CloseAllTabs" Then
+		oBrowser.CloseAllTabs
+		Reporter.ReportEvent micPass, "Browser action "& action,"Pass"
+		Browser_Action="Pass"
+	else
+		Reporter.ReportEvent micWarning, "No action specified for Browser","For Browser, no action performed"'
+		Browser_Action="Fail"
+	End If
+Else
+	Reporter.ReportEvent micFail, "Could not find Browser","Browser can not be found"
+	Browser_Action="Fail"
+End If
+	
+Set oDesc=nothing
+Set oBrowser=nothing
+
+End Function

@@ -1,0 +1,246 @@
+<Environment>
+
+	<Variable>
+
+		<Name>ChromeBrowser</Name>
+
+		<Value>chrome.exe</Value>
+
+	</Variable>
+
+	<Variable>
+
+		<Name>Application_Functions_Service</Name>
+
+		<Value>C:\UFT_Automation\Function_Library\Application_Functions_Service.qfl</Value>
+
+	</Variable>
+
+	<Variable>
+
+		<Name>Generic_Functions_Service</Name>
+
+		<Value>C:\UFT_Automation\Function_Library\Generic_Functions_Service.qfl</Value>
+
+	</Variable>
+	<Variable>
+
+		<Name>Application_Functions_JV</Name>
+
+		<Value>C:\UFT_Automation\Function_Library\Application_Functions_JV.qfl</Value>
+
+	</Variable>
+
+	<Variable>
+
+		<Name>Generic_Functions_JV</Name>
+
+		<Value>C:\UFT_Automation\Function_Library\Generic_Functions_JV.qfl</Value>
+
+	</Variable>
+
+	<Variable>
+
+		<Name>Application_Functions_Sales</Name>
+
+		<Value>C:\UFT_Automation\Function_Library\Applicaion_Functions_Sales.qfl</Value>
+
+	</Variable>
+
+	<Variable>
+
+		<Name>Generic_Functions_Sales</Name>
+
+		<Value>C:\UFT_Automation\Function_Library\Generic_Functions_Sales.qfl</Value>
+
+	</Variable>
+	
+	<Variable>
+	
+		<Name>Service_Object_Repository</Name>
+
+		<Value>C:\UFT_Automation\Object_Repository\Service_Shared_OR.tsr</Value>
+
+	</Variable>
+
+	<Variable>
+
+		<Name>Test_URL</Name>
+
+		<Value>https://test.salesforce.com/</Value>
+
+	</Variable>
+
+	<Variable>
+
+		<Name>Prod_URL</Name>
+
+		<Value>https://sabre.lightning.force.com/lightning/page/home</Value>
+
+	</Variable>
+
+	<Variable>
+
+		<Name>URL_Jira</Name>
+
+		<Value>https://ptjira.cert.sabre.com/secure/Dashboard.jspa</Value>
+
+	</Variable>
+
+	<Variable>
+
+		<Name>UID_Cert_Vigin</Name>
+
+		<Value>vigin.oommen@sabre.com.cert</Value>
+
+	</Variable>
+
+	<Variable>
+
+		<Name>PWD_Cert_Vigin</Name>
+
+		<Value>5dae1b78443755688d06dc4d37884c04c57a8bcbe2be3fc5938e7d13bbdd43f5</Value>
+
+	</Variable>
+
+		<Variable>
+
+		<Name>UID_Cert2_Vigin</Name>
+
+		<Value>vigin.oommen@sabre.com.cert2</Value>
+
+	</Variable>
+
+	<Variable>
+
+		<Name>PWD_Cert2_Vigin</Name>
+
+		<Value>5dae1b78443755688d06dc4d37884c04c57a8bcbe2be3fc5938e7d13bbdd43f5</Value>
+
+	</Variable>
+
+	<Variable>
+
+		<Name>UID_Cert4_Vigin</Name>
+
+		<Value>vigin.oommen@sabre.com.cert4</Value>
+
+	</Variable>
+
+	<Variable>
+		<Name>PWD_Cert4_Vigin</Name>
+
+		<Value>5dae1b78443755688d06dc4d37884c04c57a8bcbe2be3fc5938e7d13bbdd43f5</Value>
+
+	</Variable>
+
+	<Variable>
+
+		<Name>UID_Jira_Vigin</Name>
+
+		<Value>sg0218777</Value>
+
+	</Variable>
+
+	<Variable>
+
+		<Name>PWD_Jira_Vigin</Name>
+
+		<Value>5dae1c1e14d4e3e1ac0a281bf7499120ef15828b6cf96bc243a327508a89e50cb719bfab</Value>
+
+	</Variable>
+
+	<Variable>
+
+		<Name>GlobalUID_Vigin</Name>
+
+		<Value>vigin.oommen@sabre.com</Value>
+
+	</Variable>
+
+	<Variable>
+
+		<Name>GlobalPWD_Vigin</Name>
+
+		<Value>5dae1c1e14d4e3e1ac0a281bf7499120ef15828b6cf96bc243a327508a89e50cb719bfab</Value>
+
+	</Variable>
+
+	<Variable>
+
+		<Name>Control_File_Service_Cert</Name>
+
+		<Value>C:\UFT_Automation\Regression_suit\CERT_SERVICE_CONTROL_FILE.xlsx</Value>
+
+	</Variable>
+
+	<Variable>
+
+		<Name>Control_File_Sales_Cert</Name>
+
+		<Value>C:\UFT_Automation\Regression_suit\CERT_SALES_CONTROL_FILE.xlsx</Value>
+
+	</Variable>
+	<Variable>
+
+		<Name>JVControl_File_Sales_Cert</Name>
+
+		<Value>C:\UFT_Automation\Regression_suit\CERT_JVPARTNER_FILE.xlsx</Value>
+
+	</Variable>
+
+	<Variable>
+
+		<Name>Control_File_Service_Cert2</Name>
+
+		<Value>C:\UFT_Automation\Regression_suit\CERT2_SERVICE_CONTROL_FILE.xlsx</Value>
+
+	</Variable>
+
+	<Variable>
+
+		<Name>Control_File_Sales_Cert2</Name>
+
+		<Value>C:\UFT_Automation\Regression_suit\CERT2_SALES_CONTROL_FILE.xlsx</Value>
+
+	</Variable>
+	
+	<Variable>
+
+		<Name>Control_File_Service_Cert4</Name>
+
+		<Value>C:\UFT_Automation\Regression_suit\CERT4_SERVICE_CONTROL_FILE.xlsx</Value>
+
+	</Variable>
+	
+		<Variable>
+
+		<Name>Control_File_Sales_Cert4</Name>
+
+		<Value>C:\UFT_Automation\Regression_suit\CERT4_SALES_CONTROL_FILE.xlsx</Value>
+
+	</Variable>
+
+	<Variable>
+
+		<Name>Control_File_Service_Prod</Name>
+
+		<Value>C:\UFT_Automation\Regression_suit\PRODUCTION_SERVICE_CONROL_FILE.xlsx</Value>
+
+	</Variable>
+<Variable>
+
+		<Name>Control_File_Service_ProdTest</Name>
+
+		<Value>C:\UFT_Automation\Regression_suit\PRODUCTION_SERVICE_CONROL_FILE_TEST.xlsx</Value>
+
+	</Variable>
+	<Variable>
+
+		<Name>excelResultPath</Name>
+
+		<Value>C:\UFT_Automation\Results\Test_Result_Excel\</Value>
+
+	</Variable>
+
+</Environment>

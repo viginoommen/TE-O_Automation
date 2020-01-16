@@ -1,0 +1,1007 @@
+'Dim imageFilePath
+'Dim CaptureBitmapPath
+
+'imageFilePath = "C:\Users\sg0303193\Documents\UFT_AUTOMATION\Results\ScreenShots\"
+imageFilePath = "C:\UFT_Automation\Results\Screenshots\"
+'=============================================================
+
+'Function Name : LoginToSFDC_Admin
+'Description : 1- It opens to URL in Chrome Browser using Environment variables
+			 ' 2- Login into SalesForce as an Admin
+			 ' 3- It clicks the "Setup" link to see search input box for user account 
+			 '4- It switches to Salesforce Classic if opens Lightning first
+'Created By: Sinan Yamanoglu
+'Last UpDate:06/04/2018
+
+Function LoginToSFDC_Admin()
+
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+Set pageObject=Browser("title:=.*").Page("title:=.*")
+
+'	pageObject.WebEdit("html id:=username").Set Environment("UID_Cert_Sinan")
+'	pageObject.WebEdit("html id:=password").Setsecure Environment("PWD_Cert_Sinan")
+	
+'	pageObject.WebEdit("html id:=username").Set Environment("UID_Cert4_Sinan")
+'	pageObject.WebEdit("html id:=password").Setsecure Environment("PWD_Cert4_Sinan")
+	
+	pageObject.WebEdit("html id:=username").Set Environment("UID_Cert_Vigin")
+	pageObject.WebEdit("html id:=password").Setsecure Environment("PWD_Cert_Vigin")
+
+'	pageObject.WebEdit("html id:=username").Set Environment("UID_Cert4_Vigin")
+'	pageObject.WebEdit("html id:=password").Setsecure Environment("PWD_Cert4_Vigin")
+
+	'pageObject.WebEdit("html id:=username").Set Environment("UID_Cert_Ram")
+	'pageObject.WebEdit("html id:=password").Setsecure Environment("PWD_Cert_Ram")
+	
+'	pageObject.WebEdit("html id:=username").Set Environment("UID_Cert4_Ram")
+'	pageObject.WebEdit("html id:=password").Setsecure Environment("PWD_Cert4_Ram")
+
+'	pageObject.WebEdit("html id:=username").Set Environment("UID_Cert2_Sinan")
+'	pageObject.WebEdit("html id:=password").Setsecure Environment("PWD_Cert2_Sinan")
+
+
+	
+	pageObject.WebButton("name:=Log In to Sandbox").Click
+	
+If Browser("title:=.*").Page("title:=.*").WebButton("html tag:=BUTTON","innertext:=View profile","visible:=True","index:=0").Exist(10) Then
+	Find_WebButton "View profile", "View profile", "True", "click", 0
+	Find_Link "Switch to Salesforce Classic", "Switch to Salesforce Classic", 0, "True", "click",""
+End If
+
+	'Change innertext to your name
+If Browser("title:=.*").Page("title:=.*").WebElement("html tag:=SPAN","innertext:=Sinan Yamanoglu","html id:=userNavLabel","visible:=True").Exist(10) Then
+	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent micPass, "Login To SFDC As an Admin", "Passed", CaptureBitmapPath
+	LoginToSFDC_Admin = "Pass"
+Else
+	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent micFail, "Login To SFDC As an Admin", "Fail", CaptureBitmapPath
+	LoginToSFDC_Admin = "Fail"
+End If	
+
+Set pageobject=nothing
+
+End Function
+
+'========================================================
+'Function Name	: Log_into_SFDC_as_User	
+'Description	: Login in to Salesforce as an User
+				 'You have to login first as an Admin, then use this function
+				' If Login is successful, it will highlight user account name on top of the page				 
+'Created By: Sinan Yamanoglu
+'Last UpDate: 06/04/2018
+
+Function Log_into_SFDC_as_User (AccountOwner) 
+
+	CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+    If Browser("title:=.*").Page("title:=.*").WebEdit("html id:=username").Exist(5) Then
+    	LoginToSFDC_Admin
+    End If
+    
+    If Browser("title:=.*").Page("title:=.*").WebButton("html tag:=BUTTON","innertext:=View profile","visible:=True","index:=0").Exist(5) Then
+		Find_WebButton "View profile", "View profile", "True", "click", 0
+		Find_Link "Switch to Salesforce Classic", "Switch to Salesforce Classic", 0, "True", "click",""
+	End If
+	
+    Find_Link  "Setup", "Setup", 0, "True", "click", ""
+	Browser("title:=.*").Page("title:=.*").WebEdit("class:=quickFindInput version2","index:=0","visible:=True").Set AccountOwner
+	Browser("title:=.*").Page("title:=.*").WebEdit("class:=quickFindInput version2","index:=0","visible:=True").Click
+	wait 2
+	Set myDeviceReplay = CreateObject("Mercury.DeviceReplay")
+	myDeviceReplay.PressKey 28
+		
+	Set ClickUserName = Browser("title:=.*").Page("title:=.*").Webtable("html tag:=TABLE","class:=resultsTable.*","name:=Edit","visible:=True").ChildItem(2,2,"Link",0)
+		ClickUserName.click
+
+	If Browser("title:=.*").Page("title:=.*").WebTable("html tag:=TABLE","text:=User Detail","name:=Image").WebButton("html tag:=INPUT","name:= Login ","visible:=True").Exist(5) Then
+	   Browser("title:=.*").Page("title:=.*").WebTable("html tag:=TABLE","text:=User Detail","name:=Image").WebButton("html tag:=INPUT","name:= Login ","visible:=True").click
+		   	
+	If Browser("title:=.*").Page("title:=.*").Link("innertext:=Switch to Lightning Experience","visible:=True","class:=switch-to-lightning","index:=0").Exist(5) Then
+		Browser("title:=.*").Page("title:=.*").Link("innertext:=Switch to Lightning Experience","visible:=True","class:=switch-to-lightning","index:=0").Click
+	End If
+	
+	If not Browser("title:=.*").Page("title:=.*").WebElement("html tag:=SPAN","innertext:=Logged in as .*","visible:=True").Exist(5) Then  
+	   	Browser("title:=.*").Refresh
+	End If
+		   	
+	   	If Browser("title:=.*").Page("title:=.*").WebElement("html tag:=SPAN","innertext:=Logged in as .*","visible:=True").Exist(10) Then
+			StringUser=Browser("title:=.*").Page("title:=.*").WebElement("html tag:=SPAN","innertext:=Logged in as .*","visible:=True").GetROProperty("innertext")							
+			textArry1=split(StringUser,"Logged in as") 
+			textArry2=split(textArry1(1),"(")
+			textName=textArry2(0)
+			textName=trim(textName)
+				If AccountOwner = textName Then
+				
+					Browser("title:=.*").Page("title:=.*").WebElement("html tag:=SPAN","innertext:=Logged in as .*","visible:=True").highlight
+					Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+					Reporter.ReportEvent micPass,"Login to SFDC as an User","Passed" & CaptureBitmapPath
+					Log_into_SFDC_as_User = "Pass"
+				Else
+					Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+					Reporter.ReportEvent micFail,"UserName is NOT EXIST on the Page","Failed" & CaptureBitmapPath
+					Log_into_SFDC_as_User = "Fail"
+				End if
+		Else
+			Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+			Reporter.ReportEvent micFail,"USER COULDN'T LOGIN to the Page","Failed" & CaptureBitmapPath
+			Log_into_SFDC_as_User = "Fail"
+		End If
+	
+	Else
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micFail,"LOGIN BUTTON for user NOT AVAILABLE","Failed" & CaptureBitmapPath	
+		Log_into_SFDC_as_User = "Fail"
+    End if
+
+If Browser("title:=.*").Page("title:=.*").WebElement("innertext:=Service Console","visible:=True","index:=0").Exist(5) Then
+	Browser("title:=.*").Page("title:=.*").WebButton("value:=App Launcher","html tag:=BUTTON","visible:=True").Click
+	Browser("title:=.*").Page("title:=.*").Link("class:=appTileTitle","innertext:=Sales","visible:=True").Click
+End If
+
+End Function
+
+'==================================================================================
+'Function Name	: Log_out	
+'Description	: Usage for logging out from any user account
+'Created By: Sinan Yamanoglu
+'Last UpDate: 06/04/2018
+
+Function Log_out()
+
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+	Browser("title:=.*").Page("title:=.*").Link("innertext:=Log out as.*","html tag:=A","visible:=True").Click
+	
+	if Browser("title:=.*").Page("title:=.*").WebEdit("html id:=username").Exist(5) then
+	Browser("title:=.*").Page("title:=.*").WebButton("name:=Log In to Sandbox").Click
+	End If
+	
+	if Browser("title:=.*").Page("title:=.*").Link("innertext:=sinan\.yamanoglu@sabre\.com\.cert.*","visible:=True","index:=0").Exist(5) then
+	Browser("title:=.*").Page("title:=.*").Link("innertext:=sinan\.yamanoglu@sabre\.com\.cert.*","visible:=True","index:=0").Click
+	Browser("title:=.*").Page("title:=.*").WebButton("name:=Log In to Sandbox").Click
+	End If
+
+	If Browser("title:=.*").Page("title:=.*").WebButton("html tag:=BUTTON","innertext:=View profile","visible:=True","index:=0").Exist(5) Then
+	Find_WebButton "View profile", "View profile", "True", "click", 0
+	Find_Link "Switch to Salesforce Classic", "Switch to Salesforce Classic", 0, "True", "click"
+	End If
+	
+	If Browser("title:=.*").Page("title:=.*").WebElement("innertext:=Single Sign-On Error","html tag:=H2","visible:=True").Exist(5) Then
+	Close_Browsers
+	SystemUtil.Run Environment("ChromeBrowser"),Environment("URL_Cert"),"","open",3
+	LoginToSFDC_Admin	
+	End If
+
+	If Browser("title:=.*").Page("title:=.*").WebElement("innertext:=Switch to Lightning Experience","visible:=True","index:=0").Exist(5) Then
+	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent micPass,"Login Out Functionality","Passed" , CaptureBitmapPath	
+	Log_out = "Pass"
+	
+	Else
+	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent micFail,"Login Out Functionality","Failed" , CaptureBitmapPath
+	Log_out = "Fail"
+	End If
+	
+End Function
+
+'===============================================================================
+
+'Function Name	: createQuoteForSubscriberOpportunity	
+'Description	: It creates a quote for Subscriber Opportunity
+'Created By: Sinan Yamanoglu
+'Last UpDate: 11/28/2018
+
+Function createQuoteForSubscriberOpportunity()
+
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+Browser("Salesforce - Unlimited").InsightObject("TN_Subscriber_APAC_Link").Click
+wait 2
+Browser("Salesforce - Unlimited").InsightObject("Simplicity_Agreement_Link").Click
+wait 2
+Browser("Salesforce - Unlimited").InsightObject("Quate_Name_WebEdit").Type "Test"
+
+Browser("Salesforce - Unlimited").InsightObject("None").Click
+set wshshell = createobject("wscript.shell")
+'wshshell.SendKeys 
+wshshell.SendKeys "^{DOWN}"
+wshshell.SendKeys "{ENTER}"
+
+Browser("Salesforce - Unlimited").InsightObject("None").Click
+set wshshell = createobject("wscript.shell")
+'wshshell.SendKeys 
+wshshell.SendKeys "^{DOWN}"
+wshshell.SendKeys "^{DOWN}"
+wshshell.SendKeys "{ENTER}"
+
+
+Browser("Salesforce - Unlimited").InsightObject("No_Option_Selected_0").click
+set wshshell = createobject("wscript.shell")
+'wshshell.SendKeys 
+wshshell.SendKeys "^{DOWN}"
+wshshell.SendKeys "{ENTER}"
+wait 2
+Browser("Salesforce - Unlimited").InsightObject("No_Option_Selected_1").Click
+set wshshell = createobject("wscript.shell")
+'wshshell.SendKeys 
+wshshell.SendKeys "^{DOWN}"
+wshshell.SendKeys "{ENTER}"
+
+Browser("Salesforce - Unlimited").InsightObject("Add_to_Quote").Click
+
+If Browser("Salesforce - Unlimited").InsightObject("Quoute").Exist Then
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micPass, "Quote Number Creation", "Successful", CaptureBitmapPath
+		createQuoteForSubscriberOpportunity = "Pass"
+Else
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micFail, "Quote Number Creation", "UnSuccessful", CaptureBitmapPath
+		createQuoteForSubscriberOpportunity = "Fail"
+End If
+
+set wshshell = nothing
+
+End Function
+
+'=========================================================================
+
+'Function Name	: Compare_Contact_ID_and_Name	
+'Description	: It compares Contract ID and Contract Name in 2 diffrent page for "Validate Sabre contracts are tied to the correct account"	
+'Created By: Sinan Yamanoglu
+'Last UpDate: 10/19/2018
+
+Function Compare_Contact_ID_and_Name()
+
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+Browser("title:=.*").Page("title:=.*").Link("class:=textUnderline outputLookupLink slds-truncate forceOutputLookup", "index:=0","visible:=True","innertext:=[0-9].*").highlight
+Browser("title:=.*").Page("title:=.*").Link("class:=outputLookupLink slds-truncate forceOutputLookup", "index:=0","visible:=True").highlight
+Contract_ID = Browser("title:=.*").Page("title:=.*").Link("class:=textUnderline outputLookupLink slds-truncate forceOutputLookup", "index:=0","visible:=True","innertext:=[0-9].*").GetROProperty("innertext")
+Contract_Name = Browser("title:=.*").Page("title:=.*").Link("class:=outputLookupLink slds-truncate forceOutputLookup", "index:=0","visible:=True").GetROProperty("innertext")
+wait 2
+Browser("title:=.*").Page("title:=.*").Link("class:=textUnderline outputLookupLink slds-truncate forceOutputLookup", "index:=0","visible:=True","innertext:=[0-9].*").Click
+wait 2
+Browser("title:=.*").Page("title:=.*").WebElement("class:=uiOutputText","index:=1","visible:=True").highlight
+Browser("title:=.*").Page("title:=.*").WebElement("class:=uiOutputText","index:=3","visible:=True").highlight
+Contract_ID_2 = Browser("title:=.*").Page("title:=.*").WebElement("class:=uiOutputText","index:=1","visible:=True").GetROProperty("innertext")
+Contract_Name_2 = Browser("title:=.*").Page("title:=.*").WebElement("class:=uiOutputText","index:=3","visible:=True").GetROProperty("innertext")
+
+If Contract_ID = Contract_ID_2 Then
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micPass, "Verify that contract ID matches with account details", "Pass", CaptureBitmapPath
+		Compare_Contact_ID_and_Name = "Pass"
+	  Else
+	  	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micFail, "Verify that contract ID matches with account details", "Fail", CaptureBitmapPath
+		Compare_Contact_ID_and_Name = "Fail"
+End If
+
+End Function
+'===========================================================================
+'Function Name	: Compare_SAP_Contract_Id	
+'Description	: It compares SAP Contract ID in Salesforce and Contract ID on opening contract "Validate Sabre contracts are tied to the correct account (SAP)"
+'Created By: Sinan Yamanoglu
+'Last UpDate: 10/19/2018
+
+Function Compare_SAP_Contract_Id()
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+Browser("title:=.*").Page("title:=.*").WebElement("class:=uiOutputText","index:=2","visible:=True").highlight
+Contract_Id_in_SF = Browser("title:=.*").Page("title:=.*").WebElement("class:=uiOutputText","index:=2","visible:=True").GetROProperty("innertext")
+'print Contract_Id_in_SF
+
+Find_WebButton "SAP Contract Detail", "SAP Contract Detail", "True", "highlight", 0
+Find_WebButton "SAP Contract Detail", "SAP Contract Detail", "True", "click", 0
+
+If Browser("title:=.*").Page("title:=.*").WebElement("innertext:=We'd like to open the Salesforce page.*","class:=slds-p-around--medium","visible:=True","index:=0").Exist(5) Then
+	Browser("title:=.*").Page("title:=.*").Link("class:=slds-button uiButton uiButton--brand confirmButton","html tag:=A","innertext:=Open","visible:=True","index:=0").Click
+End If
+
+If Browser("creationtime:=1").Page("title:=Sign in to your account").Exist Then
+	Browser("creationtime:=1").Page("title:=.*").Image("class:=tile-img","name:=Image","file name:=picker_account_aad.*","visible:=True","index:=0").Click
+	LoginToMicrosoftAccount    
+    Browser("creationtime:=1").Page("title:=.*").WebElement("innertext:=Sign in","class:=submit","visible:=True","index:=0").Click
+    Browser("CreationTime:=1").Page("title:=.*").WebElement("class:=urPgHTTxtSmall","innertext:=Contract:.*","index:=0","visible:=True").highlight
+	Text = Browser("CreationTime:=1").Page("title:=.*").WebElement("class:=urPgHTTxtSmall","innertext:=Contract:.*","index:=0","visible:=True").GetROProperty("innertext")
+	TextArry = split(Text, " ")
+	SAP_Contract_Id = Trim(TextArry(1))
+	'print Trim(SAP_Contract_Id)
+Else
+ 	Browser("CreationTime:=1").Page("title:=.*").WebElement("class:=urPgHTTxtSmall","innertext:=Contract:.*","index:=0","visible:=True").highlight
+	Text = Browser("CreationTime:=1").Page("title:=.*").WebElement("class:=urPgHTTxtSmall","innertext:=Contract:.*","index:=0","visible:=True").GetROProperty("innertext")
+	TextArry = split(Text, " ")
+	SAP_Contract_Id = Trim(TextArry(1))
+	'print Trim(SAP_Contract_Id)
+End If
+
+If Contract_Id_in_SF = SAP_Contract_Id Then
+	Browser("CreationTime:=1").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent  micPass, "Verify that contract ID matches with SAP Details", "Pass", CaptureBitmapPath
+	Compare_SAP_Contract_Id = "Pass"
+	Browser("CreationTime:=1").Close
+  Else
+  	Browser("CreationTime:=1").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent micFail, "Verify that contract ID matches with SAP Details", "Fail", CaptureBitmapPath
+	Compare_SAP_Contract_Id = "Fail"
+	Browser("CreationTime:=1").Close
+End If
+
+End Function
+'========================================
+'Function Name	: ChangeOwner	
+'Description	: It changes opportunity owner
+'Created By: Sinan Yamanoglu
+'Last UpDate: 10/19/2018
+
+Function ChangeOwner(OwnerName)
+
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+Find_WebButton "Change Owner", "Change Owner", "True", "click", 0
+Find_WebEdit " default input uiInput uiInputTextForAutocomplete.*", 0, "True", "set_value", OwnerName ,"Search People\.\.\."
+Find_WebEdit " default input uiInput uiInputTextForAutocomplete.*", 0, "True", "click", "","Search People\.\.\."
+Click_WebElement "SPAN", ".*in People", "True", "itemLabel slds-truncate.*", 0, ""
+wait 3
+set oWebTableLink = Browser("title:=.*").Page("title:=.*").WebTable("class:=forceRecordLayout slds-table slds-table_cell-buffer slds-table_bordered uiVirtualDataGrid.*").ChildItem(2,1,"Link",0)
+oWebTableLink.click
+wait 5
+
+Browser("title:=.*").Page("title:=.*").WebButton("xpath:=//DIV/DIV/DIV[@role='dialog']/DIV/DIV/DIV[normalize-space()='CancelChange Owner']/BUTTON[2]").click
+Browser("title:=.*").Sync
+wait 8
+
+LinkText = Browser("title:=.*").Page("title:=.*").Link("class:= textUnderline outputLookupLink slds-truncate forceOutputLookup","html tag:=A","index:=1","visible:=True").GetROProperty("innertext")
+'print LinkText
+
+If Trim(LinkText) = Trim(OwnerName) Then
+	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent  micPass, "Change Owner", "Pass", CaptureBitmapPath
+	ChangeOwner = "Pass"
+Else
+	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent  micFail, "Change Owner", "Fail", CaptureBitmapPath
+	ChangeOwner = "Fail"
+End If	
+
+End Function
+
+'===========================================================================
+
+'Function Name	: LoginToMicrosoftAccount	
+'Description	: It logins to microsoft account using username and secured password
+'Created By: Sinan Yamanoglu
+'Last UpDate: 10/19/2018
+
+Function LoginToMicrosoftAccount()
+
+	Browser("title:=.*").Page("title:=.*").WebElement("class:=tile-img","html tag:=IMG","visible:=True","index:=0").click
+	wait 3
+	Browser("title:=.*").Page("title:=.*").WebEdit("name:=UserName","placeholder:=someone@example\.com","visible:=True","index:=0").Set Environment("GlobalUID_Vigin")
+	Browser("title:=.*").Page("title:=.*").WebEdit("name:=Password","placeholder:=Password","visible:=True","index:=0").Setsecure Environment("GlobalPWD_Vigin")
+	Browser("title:=.*").Page("title:=.*").WebElement("innertext:=Sign in","class:=submit","visible:=True","index:=0").click
+	wait 6
+
+	If Browser("title:=.*").Page("title:=.*").Exist Then
+	Reporter.ReportEvent micPass, "Login to Microsoft Account", "Pass"
+	Else
+	Reporter.ReportEvent micFail, "Login to Microsoft Account", "Fail"
+	End If
+
+End Function
+
+'==========================================================================================
+'Function Name	: Create_New_Contact	
+'Description	: It Creates new contact using account name and opportunity name
+'Created By: Sinan Yamanoglu
+'Last UpDate: 11/21/2018
+
+Function Create_New_Contact(FirstName,LastName,AccountName)
+
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+Find_Link "Contacts", "Contacts", 0, "True", "click",""
+wait 1
+Find_WebButton "New", "New", "True", "click", 0
+
+Find_WebEdit "firstName compoundBorderBottom form-element__row input", 0, "True", "set_value", FirstName, "First Name"
+Find_WebEdit "lastName compoundBorderBottom form-element__row input", 0, "True", "set_value", LastName, "Last Name"
+Browser("title:=.*").Page("title:=.*").WebEdit("xpath:=//input[@type='email'][1]").Set "test@test.com"
+Browser("title:=.*").Page("title:=.*").WebEdit("xpath:=//input[@type='tel']","index:=0").Set "1234567890"
+Browser("title:=.*").Page("title:=.*").WebEdit("xpath:=//input[@type='tel']","index:=2").Set "1234567890"
+Select_Account_Name AccountName
+wait 2
+Find_WebButton "Save","Save", "True", "click", 0
+wait 5
+'Global_Search  "Opportunities", OpportunityName
+Find_Link "Opportunities", "Opportunities",0, "True", "click",""
+Click_WebTable_First_Row_Link "slds-table forceRecordLayout slds-table--header-fixed slds-table--edit slds-table--bordered.*"
+
+Focus_WebElement "slds-card__header-title slds-truncate slds-m-right--xx-small", "Contact Roles", 0
+Find_Link "Contact Roles \(0\)","Contact Roles \(0\)",  "", "True", "click",""
+'Find_WebButton "Manage Contact Roles", "Manage Contact Roles", "True", "click", 0
+Find_WebButton "Edit Contact Roles", "Edit Contact Roles", "True", "click", 0
+Find_WebButton "Edit Contact: Item 1", "Edit Contact: Item 1", "True", "click", 0
+Find_WebList  "select","undefined lookup__menu uiAbstractList uiAutocompleteList uiInput uiAutocomplete uiInput--default uiInput--lookup", "select_item", "#1","DIV",0
+Find_WebButton "Edit Role: Item 1", "Edit Role: Item 1", "True", "click", 0
+Find_WebButton "--None--", "--None--", "True", "click", 0
+Find_Link "Sabre Employee", "Sabre Employee", 0, "True", "click",""
+Browser("title:=.*").Page("title:=.*").WebEdit("class:=slds-input slds-combobox__input.*","visible:=True","index:=1").click
+wait 1
+Set myDeviceReplay = CreateObject("Mercury.DeviceReplay")
+	myDeviceReplay.PressKey 28
+Find_WebButton "Save","Save", "True", "click", 0
+
+wait 5
+
+If Browser("title:=.*").Page("title:=.*").WebTable("class:=slds-table forceRecordLayout slds-table--header-fixed slds-table.*","visible:=True").Exist Then
+	rCount = Browser("title:=.*").Page("title:=.*").WebTable("class:=slds-table forceRecordLayout slds-table--header-fixed slds-table.*","visible:=True").RowCount
+		For k = 2 To rCount
+			strData=Browser("title:=.*").Page("title:=.*").WebTable("class:=slds-table forceRecordLayout slds-table--header-fixed slds-table.*","visible:=True").GetCellData(k,2)
+			'print strData
+			If strData = FirstName & " " & LastName Then
+				set oLink=Browser("title:=.*").Page("title:=.*").WebTable("class:=slds-table forceRecordLayout slds-table--header-fixed slds-table.*","visible:=True").ChildItem(k,2,"Link",0)
+				oLink.highlight
+				Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+				Reporter.ReportEvent micPass, "New Contact Name is created", "Pass", CaptureBitmapPath
+				Create_New_Contact = "Pass"
+				Exit for
+			Else
+			Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+			Reporter.ReportEvent micFail, "New contact name is not created", "Fail", CaptureBitmapPath
+			Create_New_Contact = "Fail"
+			End If
+		Next	
+Else
+Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+Reporter.ReportEvent micFail, "Contract roles table is not exist or New contact name is not created", "Fail", CaptureBitmapPath
+Create_New_Contact = "Fail"
+End If
+
+set oLink = nothing
+Set myDeviceReplay = nothing
+
+End Function
+
+'==================================================
+
+'Function Name	: Select_Various_Embedded_Links
+'Description	: It clicks assigned links and checks its functionality
+'Created By: Sinan Yamanoglu
+'Last UpDate: 11/29/2018
+
+Function Select_Various_Embedded_Links ()
+
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+	Click_WebElement "SPAN", "Custom Links", "True", "title", 0, ""
+	'Browser("Account | Salesforce").InsightObject("Click_Daily_MIDT_Bookings").Click
+	Find_Link "Daily MIDT Bookings", "Daily MIDT Bookings", 0, "True", "click", ""
+	
+	If Browser("title:=.*").Page("title:=.*").WebElement("innertext:=We'd like to open the Salesforce page.*","class:=slds-p-around--medium","visible:=True","index:=0").Exist(5) Then
+		Browser("title:=.*").Page("title:=.*").Link("class:=slds-button uiButton uiButton--brand confirmButton","html tag:=A","innertext:=Open","visible:=True","index:=0").Click
+	End If
+	
+	'Close_2nd_Browser ()
+	Browser_Action 1, "Close"
+	
+	'Browser("Account | Salesforce").InsightObject("Click_APAC_Asset_Rollup").Click
+	Find_Link "APAC Asset Roll-Up", "APAC Asset Roll-Up", 0, "True", "click", ""
+	
+	If Browser("title:=.*").Page("title:=.*").WebElement("innertext:=We'd like to open the Salesforce page.*","class:=slds-p-around--medium","visible:=True","index:=0").Exist(5) Then
+		Browser("title:=.*").Page("title:=.*").Link("class:=slds-button uiButton uiButton--brand confirmButton","html tag:=A","innertext:=Open","visible:=True","index:=0").Click
+	End If
+
+	VerifyLabel "H1", "TN Asset Roll Up on Top Level Account", 0, "slds-page-header__title slds-m-right_small slds-truncate slds-align-middle"
+	Browser("title:=.*").Back
+	
+	Click_WebElement "SPAN", "Custom Links", "True", "title", 0, ""
+	'Browser("Account | Salesforce").InsightObject("Click_APAC_Weekly_Air_Bookings").Click
+	Find_Link "APAC Weekly Air Bookings", "APAC Weekly Air Bookings", 0, "True", "click", ""
+	
+	If Browser("title:=.*").Page("title:=.*").WebElement("innertext:=We'd like to open the Salesforce page.*","class:=slds-p-around--medium","visible:=True","index:=0").Exist(5) Then
+		Browser("title:=.*").Page("title:=.*").Link("class:=slds-button uiButton uiButton--brand confirmButton","html tag:=A","innertext:=Open","visible:=True","index:=0").Click
+	End If
+	'Close_2nd_Browser ()
+	Browser_Action 1, "Close"
+	
+	'Browser("Account | Salesforce").InsightObject("Click_TN_Daily_Air_Bookings").Click
+	Find_Link "	TN Daily Air Bookings", "	TN Daily Air Bookings", 0, "True", "click", ""
+	
+	If Browser("title:=.*").Page("title:=.*").WebElement("innertext:=We'd like to open the Salesforce page.*","class:=slds-p-around--medium","visible:=True","index:=0").Exist(5) Then
+		Browser("title:=.*").Page("title:=.*").Link("class:=slds-button uiButton uiButton--brand confirmButton","html tag:=A","innertext:=Open","visible:=True","index:=0").Click
+	End If
+	'Close_2nd_Browser ()
+	Browser_Action 1, "Close"
+	
+	If Browser("title:=.*").Page("title:=.*").WebElement("innertext:=Custom Links","visible:=True","index:=0").Exist Then
+	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent micPass, "Select Various Embedded Links for Funtionality (Daily MIDT Bookings, Asset Rollup, Weekly Air Bookings", "Passed", CaptureBitmapPath
+	Select_Various_Embedded_Links = "Pass"
+	Else
+	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent micFail, "Select Various Embedded Links for Funtionality (Daily MIDT Bookings, Asset Rollup, Weekly Air Bookings", "Failed", CaptureBitmapPath 
+	Select_Various_Embedded_Links = "Fail"
+End If
+End Function
+
+'==========================================
+'Function Name	: Access_Travel_Network_Oppotunity
+'Description	: It checks user can not edit the opprtunity details page with specific profile
+'Created By: Sinan Yamanoglu
+'Last UpDate: 11/29/2018
+
+Function Access_Travel_Network_Oppotunity()
+
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+If Browser("title:=.*").Page("title:=.*").WebEdit("innertext:=Edit","visible:=True","index:=0").Exist(3) Then
+	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent micFail, "Access Travel Network Opportunity", "Fail", CaptureBitmapPath
+	Access_Travel_Network_Oppotunity = "Fail"
+Else
+	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent micPass, "Access Travel Network Opportunity", "Pass", CaptureBitmapPath
+	Access_Travel_Network_Oppotunity = "Pass"
+End If
+
+End Function
+
+'===========================================================================
+
+'Function Name	: Validate_My_Opportunitie_are_accurate_from_the_opportunity_list_view
+'Description	: It validates newly created opportunity in my opportunity list view exist 
+'Created By: Sinan Yamanoglu
+'Last UpDate: 11/29/2018
+
+Function Validate_My_Opportunitie_are_accurate_from_the_opportunity_list_view(OpportunityName)
+
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+If Browser("title:=.*").Page("title:=.*").WebTable("class:=slds-table forceRecordLayout slds-table--header-fixed.*","visible:=True").Exist Then
+	rCount = Browser("title:=.*").Page("title:=.*").WebTable("class:=slds-table forceRecordLayout slds-table--header-fixed.*","visible:=True").RowCount
+	For k = 2 To rCount
+		strData=Browser("title:=.*").Page("title:=.*").WebTable("class:=slds-table forceRecordLayout slds-table--header-fixed.*","visible:=True").GetCellData(k,2)
+		If strData = OpportunityName Then
+			set oLink=Browser("title:=.*").Page("title:=.*").WebTable("class:=slds-table forceRecordLayout slds-table--header-fixed.*","visible:=True").ChildItem(k,2,"Link",0)
+			oLink.highlight
+			Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+			Reporter.ReportEvent micPass, "Select account name in global search", "Pass", CaptureBitmapPath
+			Validate_My_Opportunitie_are_accurate_from_the_opportunity_list_view = "Pass"
+			Exit For
+		End If
+	Next
+Else
+	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent micFail, "WebTable is not exist", "Fail", CaptureBitmapPath
+	Validate_My_Opportunitie_are_accurate_from_the_opportunity_list_view = "Fail"
+End If	
+
+set oLink = nothing
+
+End Function
+'===========================================================================
+
+'Function Name	: ChangeOwner	
+'Description	: It changes account owner
+'Created By: Sinan Yamanoglu
+'Last UpDate: 10/19/2018
+
+Function ChangeAccountOwner(OwnerName)
+
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+Find_WebButton "Change Owner", "Change Owner", "True", "click", 0
+Find_WebEdit " default input uiInput uiInputTextForAutocomplete.*", 0, "True", "set_value", OwnerName ,"Search People\.\.\."
+Find_WebEdit " default input uiInput uiInputTextForAutocomplete.*", 0, "True", "click", "","Search People\.\.\."
+Click_WebElement "SPAN", ".*in People", "True", "itemLabel slds-truncate.*", 0,""
+wait 3
+set oWebTableLink = Browser("title:=.*").Page("title:=.*").WebTable("class:=forceRecordLayout slds-table slds-table_cell-buffer slds-table_bordered uiVirtualDataGrid.*").ChildItem(2,1,"Link",0)
+oWebTableLink.click
+wait 5
+On Error Resume Next
+Browser("title:=.*").Page("title:=.*").WebButton("xpath:=//DIV/DIV/DIV[@role='dialog']/DIV/DIV/DIV[normalize-space()='CancelChange Owner']/BUTTON[2]").click
+Browser("title:=.*").Sync
+wait 5
+
+LinkText = Browser("title:=.*").Page("title:=.*").Link("class:= textUnderline outputLookupLink slds-truncate forceOutputLookup","html tag:=A","index:=0","visible:=True").GetROProperty("innertext")
+If Trim(LinkText) = Trim(OwnerName) Then
+	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent  micPass, "Change Account Owner", "Pass", CaptureBitmapPath
+	ChangeAccountOwner = "Pass"
+Else
+	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent  micFail, "Change Account Owner", "Fail", CaptureBitmapPath
+	ChangeAccountOwner = "Fail"
+End If	
+On Error GoTo 0
+
+End Function
+
+'=================================================================
+
+'Function Name	: Select_Account_Name	
+'Description	: It looks for account name which is specified in the argument ( For Account fields in any page layout)
+'Created By: Sinan Yamanoglu
+'Last UpDate: 06/04/2018
+
+Function Select_Account_Name(AccountName)
+
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+	Find_WebEdit " default input uiInput uiInputTextForAutocomplete.*", 0, "True", "click", "","Search Accounts\.\.\." 
+	Find_WebEdit " default input uiInput uiInputTextForAutocomplete.*", 0, "True", "set_value", AccountName,"Search Accounts\.\.\."
+	Browser("title:=.*").Page("title:=.*").WebEdit("title:=Search Accounts.*","visible:=True","index:=0").click
+	wait 3
+	Set myDeviceReplay = CreateObject("Mercury.DeviceReplay")
+		myDeviceReplay.PressKey 28
+		
+	If Browser("title:=.*").Page("title:=.*").WebTable("class:=forceRecordLayout slds-table slds-table_cell-buffer.*","visible:=True").Exist Then
+		rCount = Browser("title:=.*").Page("title:=.*").WebTable("class:=forceRecordLayout slds-table slds-table_cell-buffer.*","visible:=True").RowCount
+			For k = 2 To rCount
+				strData=Browser("title:=.*").Page("title:=.*").WebTable("class:=forceRecordLayout slds-table slds-table_cell-buffer.*","visible:=True").GetCellData(k,1)
+				'print strData
+				If strData = AccountName Then
+					set oLink=Browser("title:=.*").Page("title:=.*").WebTable("class:=forceRecordLayout slds-table slds-table_cell-buffer.*","visible:=True").ChildItem(k,1,"Link",0)
+					oLink.click		
+					Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+					Reporter.ReportEvent micPass, "Select account name in the webtable", "Pass", CaptureBitmapPath
+					Select_Account_Name = "Pass"
+					Exit for					
+				End If
+			Next
+		Else
+	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent micFail, "Account results window is not displaying to find account", "Fail", CaptureBitmapPath
+	Select_Account_Name = "Fail"
+	End If	
+End Function
+
+'========================================================================
+
+'Function Name	: Global_Search	
+'Description	: It searchs the item in global search bar and opens the item
+'Created By     : Sinan Yamanoglu
+'Modified By    : Vigin Oommen
+'Last UpDate    : 03/06/2019
+
+Function Global_Search (GlobalSearchListItem,SearchValue)
+
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+Find_WebEdit  "slds-input slds-combobox__input.*",0, "True", "click", "", ""
+wait 4
+If Browser("title:=.*").Page("title:=.*").WebList("name:=select","class:=slds-listbox slds-listbox_vertical.*","visible:=True").Exist Then
+		items_count = Browser("title:=.*").Page("title:=.*").WebList("name:=select","class:=slds-listbox slds-listbox_vertical.*","visible:=True").GetROProperty("Items Count")
+	'print items_count
+	For i = 1 To items_count
+		  webListName = Browser("title:=.*").Page("title:=.*").WebList("name:=select","class:=slds-listbox slds-listbox_vertical.*","visible:=True").GetItem(i)
+	   ' print webListName
+	     If Trim(webListName) = Trim(GlobalSearchListItem) Then 
+	        Browser("title:=.*").Page("title:=.*").WebList("name:=select","class:=slds-listbox slds-listbox_vertical.*","visible:=True").Select(i-1)
+	        Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	        Reporter.ReportEvent micPass, "WebList item found on the page", "Pass", CaptureBitmapPath
+	      Exit for 	        
+	    End If
+	Next
+Else
+Reporter.ReportEvent micFail, "Weblist is not exist on the page", "Fail", CaptureBitmapPath
+Global_Search = "Fail"
+End If
+
+Browser("title:=.*").Page("title:=.*").WebEdit("title:=Search.*","visible:=True").set SearchValue
+wait 2
+Browser("title:=.*").Page("title:=.*").WebEdit("title:=Search.*","visible:=True").Click
+wait 3
+Set myDeviceReplay = CreateObject("Mercury.DeviceReplay")
+	myDeviceReplay.PressKey 28	
+wait 2
+
+rCount = Browser("title:=.*").Page("title:=.*").Webtable("class:=slds-table forceRecordLayout slds-table--header-fixed slds-table.*","visible:=True").RowCount
+		'print rCount
+
+If Browser("title:=.*").Page("title:=.*").Webtable("class:=slds-table forceRecordLayout slds-table--header-fixed slds-table.*","visible:=True").Exist Then
+	For k = 2 To rCount
+		strData=Browser("title:=.*").Page("title:=.*").Webtable("class:=slds-table forceRecordLayout slds-table--header-fixed slds-table.*","visible:=True").GetCellData(k,2)
+		'print strData
+		If Trim(strData) = Trim(SearchValue) Then
+		
+			set oLink=Browser("title:=.*").Page("title:=.*").Webtable("class:=slds-table forceRecordLayout slds-table--header-fixed slds-table.*","visible:=True").ChildItem(k,2,"Link",0)
+				oLink.click
+				Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+				Reporter.ReportEvent micPass, "Selecting the search item in a webtable", "Pass", CaptureBitmapPath
+				Global_Search = "Pass"
+				Exit For	
+		End If
+	Next
+Else
+Reporter.ReportEvent micFail, "Webtable is not exist on the page", "Fail", CaptureBitmapPath
+Global_Search = "Fail"
+End If
+
+Set myDeviceReplay = nothing
+set oLink = nothing
+
+End Function
+
+'====================================================================
+
+'Function Name	: Check_Read_Only	
+'Description	: It checks webelement content editable or not
+'Created By: Sinan Yamanoglu
+'Last UpDate: 06/04/2018
+
+Function Check_Read_Only()
+
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+	isContent = Browser("title:=.*").Page("title:=.*").WebElement("class:=uiOutputText","html tag:=SPAN","index:=0","visible:=True").GetROProperty("isContentEditable")
+	 
+	If isContent = False Then
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micPass, "Content is Read Only", "Pass", CaptureBitmapPath
+		Check_Read_Only = "Pass"
+	Else
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micFail, "Content is Editable", "Fail", CaptureBitmapPath 
+		Check_Read_Only = "Fail"
+	End If	
+	
+End Function
+
+'==========================================================================
+
+'Function Name    : DeleteTestDataCreated    
+'Description    : It search and Delete the data created
+'Created By     : Vigin Oommen
+'Last UpDate    : 05/13/2019
+
+Function DeleteTestDataCreated(GlobalSearchListItem,SearchValue)
+    Find_WebEdit  "slds-input slds-combobox__input.*",0, "True", "click", "", ""
+    wait 8
+    items_count = Browser("title:=.*").Page("title:=.*").WebList("name:=select","class:=slds-listbox slds-listbox_vertical.*","visible:=True").GetROProperty("Items Count")
+    'print items_count
+    For i = 1 To items_count -1
+          webListName = Browser("title:=.*").Page("title:=.*").WebList("name:=select","class:=slds-listbox slds-listbox_vertical.*","visible:=True").GetItem(i)
+        
+         If webListName = GlobalSearchListItem Then 
+            Browser("title:=.*").Page("title:=.*").WebList("name:=select","class:=slds-listbox slds-listbox_vertical.*","visible:=True").Select(i-1) 
+            Exit for 
+            else        
+        End If
+    Next
+    
+    Browser("title:=.*").Page("title:=.*").WebEdit("title:=Search.*","visible:=True").set SearchValue
+    wait 2
+    Browser("title:=.*").Page("title:=.*").WebEdit("title:=Search.*","visible:=True").Click
+    wait 3
+    Set myDeviceReplay = CreateObject("Mercury.DeviceReplay")
+        myDeviceReplay.PressKey 28    
+    wait 2
+        rCount = Browser("title:=.*").Page("title:=.*").Webtable("class:=slds-table forceRecordLayout slds-table--header-fixed slds-table.*","visible:=True").RowCount
+            'print rCount
+    
+    For k = 2 To rCount
+        If Browser("title:=.*").Page("title:=.*").WebTable("class:=slds-table forceRecordLayout slds-table--header-fixed slds-table.*","visible:=True").Exist(10) Then
+            Find_WebButton "Show More", "Show More", "True", "click", 0
+        Find_Link "Delete", "Delete", 0, "True", "click", ""
+        'wait 3
+        Find_WebButton "Delete", "Delete", "True", "click", 0
+        'wait 4
+        Browser("title:=.*").Refresh
+        'wait 10
+        Reporter.ReportEvent micPass, "Test Data Deleted", "Pass"
+            DeleteTestDataCreated = "Pass"
+           else
+            Reporter.ReportEvent micFail, "Test Data NOT Deleted", "Fail"
+            DeleteTestDataCreated = "Fail"
+        End If
+    Next
+    Set myDeviceReplay = nothing
+    set oLink = nothing
+End Function
+
+'=========================================================================
+
+
+
+'=================================================================
+'Function Name	: Select_Product_Name	
+'Description	: It looks for product name which is specified in the argument
+'Created By: Ramanjaneyulu Kuruba
+'Last UpDate: 08/05/2018
+
+Function Select_Product_Name(ProductName)
+
+	CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+	Find_WebEdit "default input uiInput uiInputTextForAutocomplete.*", 0, "True", "click", "","Search Products\.\.\." 
+	Find_WebEdit "default input uiInput uiInputTextForAutocomplete.*", 0, "True", "set_value", ProductName,"Search Products\.\.\."
+	Browser("title:=.*").Page("title:=.*").WebEdit("title:=Search Products.*","visible:=True").click
+	wait 3
+	Set myDeviceReplay = CreateObject("Mercury.DeviceReplay")
+		myDeviceReplay.PressKey 28
+		
+	If Browser("title:=.*").Page("title:=.*").WebTable("class:=slds-table forceRecordLayout slds-table--header-fixed.*","visible:=True").Exist Then
+		rCount = Browser("title:=.*").Page("title:=.*").WebTable("class:=slds-table forceRecordLayout slds-table--header-fixed.*","visible:=True").RowCount
+			For k = 2 To rCount
+				strData=Browser("title:=.*").Page("title:=.*").WebTable("class:=slds-table forceRecordLayout slds-table--header-fixed.*","visible:=True").GetCellData(k,3)
+				'print strData
+				If strData = ProductName Then
+				
+					set oChkBox=Browser("title:=.*").Page("title:=.*").WebTable("class:=slds-table forceRecordLayout slds-table--header-fixed.*","visible:=True").ChildItem(k,2,"WebElement",2)
+					oChkBox.highlight
+					oChkBox.click		
+					Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+					Reporter.ReportEvent micPass, "Select product name in the webtable", "Pass", CaptureBitmapPath
+					Select_Product_Name = "Pass"
+					Exit for					
+				End If
+			Next
+		Else
+	Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+	Reporter.ReportEvent micFail, "product results window is not displaying to find product", "Fail", CaptureBitmapPath
+	Select_Product_Name = "Fail"
+	End If	
+End Function
+
+'=========================================================================
+
+'=================================================================
+'Function Name	: NewOpp_AirlineSolutions_SetData	
+'Description	: It sets data into the fields in 'New Opportunity: Airline Solutions' popup which is specified in the argument
+'Created By: Ramanjaneyulu Kuruba
+'Last UpDate: 08/06/2018
+
+Function NewOpp_AirlineSolutions_SetData(sOpportunityName,sAccountName,sDescription,sNextStep,sStage,sType,sCloseDate)
+
+		CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+		VerifyLabel	"H2","New Opportunity: Airline Solutions",0,"inlineTitle slds-p-top--large slds-p-horizontal--medium.*"	
+		Find_WebButton "Save","Save",True,"click",0
+		VerifyLabel	"LI","These required fields must be completed: Account Name, Close Date, Opportunity Name, Stage, Type",0,""		
+
+		Browser("title:=.*").Page("title:=.*").WebEdit("name:=WebEdit","html tag:=INPUT","index:=3").click
+		Browser("title:=.*").Page("title:=.*").WebEdit("name:=WebEdit","html tag:=INPUT","index:=3").Set sOpportunityName
+		Select_Account_Name sAccountName
+		Find_WebEdit " textarea",0,True,"set_value",sDescription,""
+		Find_WebEdit " textarea",1,True,"set_value",sNextStep,""
+		Find_WebButton "--None--","--None--",True,"click",1
+		Find_Link sStage,sStage,0,True,"click",""
+		Find_WebButton	"--None--","--None--",True,"click",1
+		Find_Link	sType,sType,0,True,"click",""
+		
+		Browser("title:=.*").Page("title:=.*").WebEdit("name:=WebEdit","html tag:=INPUT","index:=14").click
+		Browser("title:=.*").Page("title:=.*").WebEdit("name:=WebEdit","html tag:=INPUT","index:=14").Set sCloseDate
+		
+		Find_WebButton "Save","Save",True,"click",0
+			
+	If Browser("title:=.*").Page("title:=.*").WebButton("name:=Save","innertext:=Save","Visible:=True","index:=0").Exist(3)=False Then
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micPass, "Fill data in 'New Opp AS' popup is NOT successful", "Fail", CaptureBitmapPath
+		NewOpp_AirlineSolutions_SetData = "Fail"
+		else
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micPass, "Fill data in 'New Opp AS' popup is successful", "Pass", CaptureBitmapPath
+		NewOpp_AirlineSolutions_SetData = "Pass"
+	End If	
+
+End Function
+'=========================================================================
+'=========================================================================
+
+'=================================================================
+'Function Name	: NewOpp_TNSupplierCommerce_SetData	
+'Description	: It sets data into the fields in 'New Opportunity: Airline Solutions' popup which is specified in the argument
+'Created By: Ramanjaneyulu Kuruba
+'Last UpDate: 08/06/2018
+
+Function NewOpp_TNSupplierCommerce_SetData(sOpportunityName,sAccountName,sMaintenanceTerm,sStage,sType,sCloseDate)
+
+		CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+		VerifyLabel	"H2","New Opportunity: Supplier Commerce",0,"inlineTitle slds-p-top--large slds-p-horizontal--medium.*"	
+		Find_WebButton "Save","Save",True,"click",0
+		VerifyLabel	"LI","These required fields must be completed: Account Name, Close Date, Maintenance Term.*",0,""		
+
+		Browser("title:=.*").Page("title:=.*").WebEdit("name:=WebEdit","html tag:=INPUT","index:=3").click
+		Browser("title:=.*").Page("title:=.*").WebEdit("name:=WebEdit","html tag:=INPUT","index:=3").Set sOpportunityName
+		Select_Account_Name sAccountName
+		Find_WebButton "--None--","--None--",True,"click",1
+		Find_Link sStage,sStage,0,True,"click",""
+		Find_WebButton	"--None--","--None--",True,"click",0
+		Find_Link	sType,sType,0,True,"click",""
+		
+		Browser("title:=.*").Page("title:=.*").WebEdit("name:=WebEdit","html tag:=INPUT","index:=5").click
+		Browser("title:=.*").Page("title:=.*").WebEdit("name:=WebEdit","html tag:=INPUT","index:=5").Set sCloseDate
+		
+		Browser("title:=.*").Page("title:=.*").WebEdit("name:=WebEdit","html tag:=INPUT","index:=9").click
+		Browser("title:=.*").Page("title:=.*").WebEdit("name:=WebEdit","html tag:=INPUT","index:=9").Set sMaintenanceTerm
+		Find_WebButton "Save","Save",True,"click",0
+			
+	If Browser("title:=.*").Page("title:=.*").WebElement("class:=inlineTitle slds-p-top--large slds-p-horizontal--medium.*","innertext:=New Opportunity: Supplier Commerce","html tag:=H2","index:=0").Exist(3)=False Then
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micPass, "Fill data in 'New Opp TN' popup is NOT successful", "Fail", CaptureBitmapPath
+		NewOpp_TNSupplierCommerce_SetData = "Fail"
+		else
+		Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+		Reporter.ReportEvent micFail, "Fill data in 'New Opp TN' popup is successful", "Pass", CaptureBitmapPath
+		NewOpp_TNSupplierCommerce_SetData = "Pass"
+	End If	
+
+End Function
+'=================================================================
+'Function Name	: Edit_Details_AS_Opportunity	
+'Description	: It edits the required fields on details page in AS Opportunity
+'Created By: Ramanjaneyulu Kuruba
+'Last UpDate: 08/06/2018
+
+Function Edit_Details_AS_Opportunity()
+
+		CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+	    Find_WebButton "Edit Stage","Edit Stage",True,"click",0
+		Wait_Time	5				
+		Find_WebButton "1 - Identify", "1 - Identify",True,"click",0
+		Find_Link "2 - Qualify","2 - Qualify",1,True,"click",""
+
+
+		Browser("title:=.*").Page("title:=.*").WebEdit("class:= input","type:=text","html tag:=INPUT","index:=3").click
+		Browser("title:=.*").Page("title:=.*").WebEdit("class:= input","type:=text","html tag:=INPUT","index:=3").Set "12"
+		
+		
+		Browser("title:=.*").Page("title:=.*").WebEdit("class:= input","type:=text","html tag:=INPUT","index:=1").click
+		Browser("title:=.*").Page("title:=.*").WebEdit("class:= input","type:=text","html tag:=INPUT","index:=1").Set "12"
+		
+		Browser("title:=.*").Page("title:=.*").WebEdit("class:= input","type:=text","html tag:=INPUT","index:=2").click
+		Browser("title:=.*").Page("title:=.*").WebEdit("class:= input","type:=text","html tag:=INPUT","index:=2").Set Date+75
+		
+		Find_WebButton "Save","Save",True,"click",0
+		Wait_Time	7	
+		
+		if Browser("title:=.*").Page("title:=.*").Webbutton("innertext:=Edit Stage","name:=Edit Stage","index:=0").Exist=True then
+			Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+			Reporter.ReportEvent micPass, "Edit data in Details Opportunity is successful", "Pass", CaptureBitmapPath
+			Edit_Details_AS_Opportunity = "Pass"
+		else
+			Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+			Reporter.ReportEvent micFail, "Edit data in Details Opportunity is NOT successful", "Fail", CaptureBitmapPath
+			Edit_Details_AS_Opportunity = "Fail"
+	End If	
+		
+End Function
+
+'===========================================================================================
+'Function Name	: Select_NewlyCreatedOpportunity
+'Description	: It clicks newly created Opportunity
+'				  Compares with opening opportunity in page layout
+'				  Highlights opportunity if it is true
+'Created By: Ramanjaneyulu Kuruba
+'Last UpDate: 08/06/2019
+
+Function Select_NewlyCreatedOpportunity(index)
+CaptureBitmapPath = imageFilePath & RandomNumber(0,10000) &".png"
+
+	If Browser("title:=.*").Page("title:=.*").Link("class:=forceActionLink","name:=[a-z]|[A-Z].*","html tag:=A","visible:=True","index:="&index).Exist(3)=True Then
+		Browser("title:=.*").Page("title:=.*").Link("class:=forceActionLink","name:=[a-z]|[A-Z].*","html tag:=A","visible:=True","index:="&index).highlight
+		Link_Text = Browser("title:=.*").Page("title:=.*").Link("class:=forceActionLink","name:=[a-z]|[A-Z].*","html tag:=A","visible:=True","index:="&index).GetROProperty("innertext")
+		'print Link_Text
+		Browser("title:=.*").Page("title:=.*").Link("class:=forceActionLink","name:=[a-z]|[A-Z].*","html tag:=A","visible:=True","index:="&index).Click
+		wait 5
+		Opportunity_name = Browser("title:=.*").Page("title:=.*").WebElement("html tag:=SPAN","class:=uiOutputText","visible:=True","index:=0").GetROProperty("innertext")
+		'print Case_Number
+		Environment.Value("Opportunity_name")=Opportunity_name
+		If Link_Text = Opportunity_name Then
+			Browser("title:=.*").Page("title:=.*").WebElement("html tag:=SPAN","class:=uiOutputText","visible:=True","index:=0").highlight
+			Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+			Reporter.ReportEvent micPass, "Click Save", "Pass", CaptureBitmapPath
+			Select_NewlyCreatedOpportunity = "Pass"
+		Else
+			Browser("title:=.*").Page("title:=.*").CaptureBitmap CaptureBitmapPath,True
+			Reporter.ReportEvent micPass, "Click Save", "Fail", CaptureBitmapPath
+			Select_NewlyCreatedOpportunity = "Fail"
+		End If	
+		
+	End If
+	
+End Function
+

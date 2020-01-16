@@ -1,0 +1,14 @@
+﻿<Properties>
+  <WatchEntry0 value="rCount" />
+  <WatchEntry1 value="webListName" />
+  <WatchEntry10 value="rCount" />
+  <WatchEntry11 value="strData" />
+  <WatchEntry2 value="rCount" />
+  <WatchEntry3 value="strData" />
+  <WatchEntry4 value="CaseRecordNumber" />
+  <WatchEntry5 value="CaseRecordNumber" />
+  <WatchEntry6 value="CaseRecordNumber" />
+  <WatchEntry7 value="CaseRecordNumber" />
+  <WatchEntry8 value="oLink" />
+  <WatchEntry9 value="Browser(&quot;title:=.*&quot;).Page(&quot;title:=.*&quot;).Link(&quot;innertext:=Log out as.*&quot;,&quot;html tag:=A&quot;,&quot;visible:=True&quot;).Exist(10)" />
+</Properties>
